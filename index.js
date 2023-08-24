@@ -84,21 +84,11 @@ async function run() {
      * * use jwt token: verifyJWT
      * * use verifyAdmin middleware after the call verifyJWT
      */
-    app.get("/users", async (req, res) => {
+  
+    app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
-
-    app.get("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id) };
-      const result = await usersCollection.findOne(filter);
-      res.send(result);
-    });
-    // app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
-    //   const result = await usersCollection.find().toArray();
-    //   res.send(result);
-    // });
 
     app.get("/users/admin/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
